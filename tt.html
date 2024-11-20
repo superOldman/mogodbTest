@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="content_views" class="htmledit_views">
+      <h4>
+        <a name="t0"></a
+        ><strong
+          ><strong><strong> 1. 编辑配置文件： </strong></strong
+          ><strong
+            ><span style="background-color: #f3f5f9"
+              ><span style="color: #0abf5b"
+                ><strong> /etc/docker/daemon.json</strong></span
+              ></span
+            ></strong
+          ></strong
+        >
+      </h4>
+      <p>
+        { "registry-mirrors": [ "https://<span
+          class="words-blog hl-git-1"
+          data-tit="docker"
+          data-pretit="docker"
+          >docker</span
+        >.211678.top", "https://docker.1panel.live", "https://hub.rat.dev",
+        "https://docker.m.daocloud.io", "https://do.nark.eu.org",
+        "https://dockerpull.com", "https://dockerproxy.cn",
+        "https://docker.awsl9527.cn" ] }
+      </p>
+
+      <h4>
+        <a name="t1"></a
+        ><strong
+          ><strong><strong>2. 加载修改后的配置文件</strong></strong></strong
+        >
+      </h4>
+
+      <span><span style="color: #dc143c">systemctl daemon-reload</span></span>
+
+      <h4>
+        <a name="t2"></a
+        ><strong
+          ><strong><strong>3. 重启docker</strong></strong></strong
+        >
+      </h4>
+
+      <span><span style="color: #dc143c">systemctl restart docker</span></span>
+
+      <h4>
+        <a name="t3"></a
+        ><strong
+          ><strong><strong>4. 查看配置</strong></strong></strong
+        >
+      </h4>
+
+      <span><span style="color: #dc143c">docker info</span></span>
+    </div>
+
+    '  1. 编辑配置文件：  
+    /etc/docker/daemon.json 
+     {
+    "registry-mirrors": [ "https://docker.211678.top",
+    "https://docker.1panel.live", "https://hub.rat.dev",
+    "https://docker.m.daocloud.io", "https://do.nark.eu.org",
+    "https://dockerpull.com", "https://dockerproxy.cn",
+    "https://docker.awsl9527.cn" ] } 
+     2. 加载修改后的配置文件 
+    systemctl daemon-reload 
+     3. 重启docker  systemctl restart docker
+     4. 查看配置  docker info '
+
+
+
+
+
+     <code class="has-numbering" onclick="mdcp.signin(event)" style="position: unset;">cat &lt;&lt;EOF&gt; start.sh
+      #!/bin/bash
+      MONGODB_DIR=`pwd`
+      docker stop mongodb
+      docker rm mongodb
+      docker run -d \\
+        --name mongodb \\
+        --restart always \\
+        --privileged \\
+        -p 27017:27017 \\
+        -v \${MONGODB_DIR}/data:/data/db \\
+        -e MONGO_INITDB_ROOT_USERNAME=admin \\
+        -e MONGO_INITDB_ROOT_PASSWORD=admin123 \\
+        mongo:4.2.2 mongod --auth
+      EOF
+      <div class="hljs-button signin active" data-title="登录复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4334&quot;}"></div></code>
+
+
+
+      docker run -d \
+      --name mongodb \
+      --restart always \
+      --privileged \
+      -p 27017:27017 \      
+      -e MONGO_INITDB_ROOT_USERNAME=admin \
+      -e MONGO_INITDB_ROOT_PASSWORD=admin123 \
+      mongo:latest mongosh --auth
+
+      docker run --name mongodb-instance \
+          -p 27017:27017 \
+          --network mongo-network \
+          -e MONGO_INITDB_ROOT_USERNAME=admin \
+          -e MONGO_INITDB_ROOT_PASSWORD=password \
+          -d mongo:latest
+
+
+  </body>
+</html>
