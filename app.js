@@ -1,14 +1,32 @@
 require("./db.js");
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const http = require("http").Server(app);
 const io = require("socket.io")(http, { cors: true });
 const socket = require("./socket/index");
 socket.server(io);
 
+// 配置 CORS
+const whitelist = ["http://www.sicilymarmot.top", "http://sicilymarmot.top"];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  }, // 允许访问的域名
+  methods: "GET,POST,PUT,DELETE", // 允许的方法
+  credentials: true, // 允许携带 Cookies
+};
+
+app.use(cors(corsOptions));
+
 const loggerMiddleware = require("./middleware/logger.js");
 app.use(loggerMiddleware);
-let User = require("./user/User.js");
+
+const User = require("./user/User.js");
 
 app.get("/", function (req, res) {
   res.sendFile(__dirname + "/index.html");
@@ -77,18 +95,18 @@ app.get("/api/getList", async function (req, res) {
         message: "失败",
       });
     } else {
-      let theMap = socket.getUserList()
+      let theMap = socket.getUserList();
       // console.log('getUserList', theMap);
 
-      const list = []
-      theMap.forEach((value,key, map)=>{
+      const list = [];
+      theMap.forEach((value, key, map) => {
         list.push({
           token: key,
-          socketId: value.id
-        })
-      })
+          socketId: value.id,
+        });
+      });
       // 反序列化
-     
+
       res.send({
         code: 200,
         data: list,
